@@ -34,7 +34,7 @@ fn servedBy(list: []const []const u8, name: []const u8) bool {
 }
 
 /// The CUDA build's own flags and variables (the Metal build refuses them).
-const cuda_build = builtin.os.tag == .linux;
+const cuda_build = builtin.os.tag == .linux or builtin.os.tag == .windows;
 
 /// Python serve flags plus this binary's native-only flags; supported flags are marked native.
 pub const flags = [_]Flag{
