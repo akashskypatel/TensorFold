@@ -63,7 +63,12 @@ pub fn main(init: std.process.Init) !u8 {
             std.debug.print("{s}", .{usage});
             return 2;
         }
-        return @import("qwen35_stage.zig").run(init, a, args[1], args[3], fp8);
+        if (@import("builtin").os.tag == .windows) {
+            std.debug.print("stage is not supported on Windows (stage transport requires POSIX sockets)\n", .{});
+            return 2;
+        } else {
+            return @import("qwen35_stage.zig").run(init, a, args[1], args[3], fp8);
+        }
     }
     if (args.len >= 4 and std.mem.eql(u8, args[2], "pipe")) {
         const fp8 = args.len == 5 and std.mem.eql(u8, args[4], "fp8");
@@ -71,7 +76,12 @@ pub fn main(init: std.process.Init) !u8 {
             std.debug.print("{s}", .{usage});
             return 2;
         }
-        return @import("qwen35_pipe.zig").run(init, a, args[1], args[3], fp8);
+        if (@import("builtin").os.tag == .windows) {
+            std.debug.print("pipe is not supported on Windows (stage transport requires POSIX sockets)\n", .{});
+            return 2;
+        } else {
+            return @import("qwen35_pipe.zig").run(init, a, args[1], args[3], fp8);
+        }
     }
     if (args.len >= 3 and std.mem.eql(u8, args[2], "kl")) {
         if (args.len != 7 and args.len != 8) {
